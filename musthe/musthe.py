@@ -56,6 +56,7 @@ class Note():
         if note_pattern.search(note) == None:
             raise Exception('Could not parse the note: '+note)
 
+        self.note
         self.tone = note[0]
         self.accidental = re.findall('[b#]{1,3}', note)
         self.octave = re.findall('[0-9]', note)
@@ -117,6 +118,10 @@ class Note():
 
         return Note(new_note_tone+accidental+str(new_note_octave))
 
+    def __sub__(self, interval):
+        _new_note = Note(self.note) + interval.complement
+        
+    
     def frequency(self):
         """
         Returns frequency in Hz. It uses the method given in
@@ -145,7 +150,7 @@ class Interval():
     The interval class.
 
     The notes are to be parsed in th following way:
-    * the quality, (m, M, p, A, d)
+    * the quality, (m, M, P, A, d)
     * the number. (1 to 8) [Compound intervals will be supported]
 
     For example, 'd8', 'P1', 'A5' are valid intervals. 'P3', '5' are not.
@@ -159,8 +164,17 @@ class Interval():
                               'd8':11, 'P8':12}[interval]
         except:
             raise Exception('Could not parse the interval.')
+        
+        self.quality = interval[0]
         self.number = int(interval[1])
 
+        quality_complement = {'M': 'm',
+                              'm': 'M',
+                              'A': 'd',
+                              'd': 'a',
+                              'P': 'P'}
+        
+        self.complement = quality_complement[self.quality] + str((9 - self.number))
 
 class Chord():
     chord_recipes = {'M': ['R', 'M3', 'P5'],
