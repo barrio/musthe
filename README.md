@@ -40,13 +40,13 @@ Though it is important to see that the octaves of those notes are different:
 
 Now lets try scales:
 
-    >>> scale(Note('B'), 'major')
+    >>> Scale(Note('B'), 'major')
     [Note("B4"), Note("C#5"), Note("D#5"), Note("E5"), Note("F#5"), Note("G#5"), Note("A#5"), Note("B5")]
 
-It return a list of Note instances, so if you want a cleaner result should do something like:
+It returns a list of Note instances, but can also be printed for a clean output:
 
-    >>> list(map(str, scale(Note('B'), 'major')))
-    ['B', 'C#', 'D#', 'E', 'F#', 'G#', 'A#', 'B']
+    >>> print Scale(Note('B'), 'major')
+    B C# D# E F# G# A# B
     
 Fair enough.
 

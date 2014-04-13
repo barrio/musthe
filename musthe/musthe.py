@@ -8,23 +8,35 @@ Copyright (c) 2014 Gonzalo Ciruelos <gonzalo.ciruelos@gmail.com>
 import re
 
 
-def scale(note, scale_name):
-    scales = {
-        'major' :           ['M2', 'M3', 'P4', 'P5', 'M6', 'M7', 'P8'],
-        'natural_minor':    ['M2', 'm3', 'P4', 'P5', 'm6', 'm7', 'P8'],
-        'harmonic_minor':   ['M2', 'm3', 'P4', 'P5', 'm6', 'M7', 'P8'],
-        'melodic_minor':    ['M2', 'm3', 'P4', 'P5', 'M6', 'M7', 'P8'],
-        'dorian':           ['M2', 'm3', 'P4', 'P5', 'M6', 'm7', 'P8'],
-        'locrian':          ['m2', 'm3', 'P4', 'd5', 'm6', 'm7', 'P8'],
-        'lydian':           ['M2', 'M3', 'A4', 'P5', 'M6', 'M7', 'P8'],
-        'mixolydian':       ['M2', 'M3', 'P4', 'P5', 'M6', 'm7', 'P8'],
-        'phrygian':         ['m2', 'm3', 'P4', 'P5', 'm6', 'm7', 'P8'],
-        'major_pentatonic': ['M2', 'M3', 'P5', 'M6', 'P8'],
-        'minor_pentatonic': ['m3', 'P4', 'P5', 'm7', 'P8']
-    }
-    if scale_name in scales:
-        return [note] + [note+Interval(i) for i in scales[scale_name]]
-    raise Exception('No scale named '+scale_name)
+class Scale():
+    def __init__(self, base_note, name):
+        self.base_note = base_note
+        self.name = name
+
+        scales = {
+            'major':            ['M2', 'M3', 'P4', 'P5', 'M6', 'M7', 'P8'],
+            'natural_minor':    ['M2', 'm3', 'P4', 'P5', 'm6', 'm7', 'P8'],
+            'harmonic_minor':   ['M2', 'm3', 'P4', 'P5', 'm6', 'M7', 'P8'],
+            'melodic_minor':    ['M2', 'm3', 'P4', 'P5', 'M6', 'M7', 'P8'],
+            'dorian':           ['M2', 'm3', 'P4', 'P5', 'M6', 'm7', 'P8'],
+            'locrian':          ['m2', 'm3', 'P4', 'd5', 'm6', 'm7', 'P8'],
+            'lydian':           ['M2', 'M3', 'A4', 'P5', 'M6', 'M7', 'P8'],
+            'mixolydian':       ['M2', 'M3', 'P4', 'P5', 'M6', 'm7', 'P8'],
+            'phrygian':         ['m2', 'm3', 'P4', 'P5', 'm6', 'm7', 'P8'],
+            'major_pentatonic': ['M2', 'M3', 'P5', 'M6', 'P8'],
+            'minor_pentatonic': ['m3', 'P4', 'P5', 'm7', 'P8']
+        }
+
+        if self.name in scales:
+            self.notes = [self.base_note] + [self.base_note + Interval(i) for i in scales[self.name]]
+        else:
+            raise Exception('No scale named '+self.name)
+
+    def __repr__(self):
+        return str(self.notes)
+
+    def __str__(self):
+        return ' '.join(map(str, self.notes))
 
 
 class Note():
@@ -193,5 +205,4 @@ class Chord():
             return all(self.notes[i] == other.notes[i] for i in range(len(self.notes)))
 
 if __name__ == '__main__':
-    add = Note('Ab')+Interval('m3')
-    print add
+    pass
