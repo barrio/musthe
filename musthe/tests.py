@@ -17,6 +17,7 @@ class TestsForJesus(unittest.TestCase):
     def test_interval_parsing(self):
         self.assertEqual(Interval('d5').semitones, 6)
         self.assertRaises(Exception, Interval, 'P3')
+        self.assertEqual(Interval('P5').complement().name, 'P4')
 
     def test_note_sum(self):
         self.assertEqual(str(Note('A4')+Interval('d5')), str(Note('Eb')))

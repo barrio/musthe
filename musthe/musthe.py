@@ -87,6 +87,7 @@ class Note():
         # E is: (E F G A) B.
         _old_tone = 'CDEFGABCDEFGABCDEFGAB'.index(self.tone)
         # Fixing Issue #7: Note('Ab')+Interval('m3') --> Exception
+        # Fixme: Still buggy, e. g. Scale('Abb')+Interval('m3') --> Exception
         if self.tone == 'A' and self.accidental.startswith('b') and interval.number == 3 and interval.semitones == 3:
             new_note_tone = 'B'
         else:
@@ -136,6 +137,9 @@ class Note():
     def __str__(self):
         return self.tone+self.accidental
 
+    def __sub__(self, other):
+        raise NotImplementedError('Implement __add__ with complementary interval & correct octave.')
+
     def __eq__(self, other):
         return self.scientific_notation() == other.scientific_notation()
 
@@ -150,6 +154,7 @@ class Interval():
 
     For example, 'd8', 'P1', 'A5' are valid intervals. 'P3', '5' are not.
     """
+
     def __init__(self, interval):
         try:
             self.semitones = {'P1': 0, 'A1':1, 'd2':0, 'm2':1, 'M2':2, 'A2':3,
@@ -159,8 +164,22 @@ class Interval():
                               'd8':11, 'P8':12}[interval]
         except:
             raise Exception('Could not parse the interval.')
+        self.name = interval
+        self.quality = interval[0]
         self.number = int(interval[1])
 
+    def complement(self):
+        """
+        Calculate the complement interval.
+        Quality: Changes from major to minor, augmented to diminished and vice versa.
+        Number: Complement number is 9 - number
+        """
+        complement_quality = {'P': 'P', 'M': 'm', 'm': 'M', 'd': 'A', 'A': 'd'}[self.quality]
+        complement_number = 9 - self.number
+        return Interval(complement_quality + str(complement_number))
+
+    def __repr__(self):
+        return self.name
 
 class Chord():
     chord_recipes = {'M': ['R', 'M3', 'P5'],
